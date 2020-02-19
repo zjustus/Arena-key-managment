@@ -1,4 +1,4 @@
-/** 
+/**
 	Key Managment Install Script
 	Developed by: Zach Justus
 	Org: Luminate Church
@@ -48,7 +48,7 @@ create or alter proc dbo.cust_luminate_key_sp_add_location(@location_name varcha
 BEGIN
 	insert into dbo.cust_luminate_key_location(location_name, parent_id)
 		Values(@location_name, @parent_id)
-	
+
 	set @location_id = @@IDENTITY
 	return
 END
@@ -129,7 +129,10 @@ GO
 --get locations
 create or alter proc dbo.cust_luminate_key_sp_get_locations(@parent_id int = null) as
 BEGIN
-	select * from dbo.cust_luminate_key_location where location_id = @parent_id
+	if @parent_id is null
+		select * from dbo.cust_luminate_key_location where parent_id is null
+	else
+		select * from dbo.cust_luminate_key_location where parent_id = @parent_id
 END
 GO
 --get doors
@@ -141,8 +144,8 @@ GO
 --get person keys
 create or alter proc dbo.cust_luminate_key_sp_get_person_keys(@person_id int) as
 BEGIN
-	select 
-		[key].[key_id], 
+	select
+		[key].[key_id],
 		[key].[key_name],
 		key_person.date_issued
 	from dbo.cust_luminate_key_key as [key]
