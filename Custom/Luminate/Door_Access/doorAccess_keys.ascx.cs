@@ -71,11 +71,17 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
 
             //get the DataSource
             //DataSource = new ListData().GetPublicReports(ArenaContext.Current.Organization.OrganizationID, listcategoryid, CurrentPerson.PersonID);
-            if(String.IsNullOrEmpty(Request["parentID"])){
+            if(String.IsNullOrEmpty(Request["DoorID"]) && String.IsNullOrEmpty(Request["UserID"])){
                 DataSource = new keyData().GetKeys();
             }
+            else if(!String.IsNullOrEmpty(Request["DoorID"]) && String.IsNullOrEmpty(Request["UserID"])){
+                DataSource = new keyData().GetKeysByDoor(Int32.Parse(Request["DoorID"]));
+            }
+            else if(String.IsNullOrEmpty(Request["DoorID"]) && !String.IsNullOrEmpty(Request["UserID"])){
+                DataSource = new keyData().GetKeysByPerson(Int32.Parse(Request["UserID"]));
+            }
             else{
-                DataSource = new keyData().GetKeys(Int32.Parse(Request["parentID"]));
+                DataSource = new keyData().GetKeysByPersonDoor(Int32.Parse(Request["UserID"]), Int32.Parse(Request["DoorID"]));
             }
 
             dgKeys.Columns[5].Visible = true;
@@ -268,6 +274,56 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
             {
             }
         }
+        //GetKeysByDoor
+        public DataTable GetKeysByDoor(int door_id){
+            ArrayList paramList = new ArrayList();
+            paramList.Add((object) new SqlParameter("@door_id", door_id));
+            try
+            {
+                return this.ExecuteDataTable("cust_luminate_key_sp_get_door_keys", paramList);
+            }
+            catch (SqlException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+            }
+        }
+        //GetKeysByPerson
+        public DataTable GetKeysByPerson(int person_id){
+            ArrayList paramList = new ArrayList();
+            paramList.Add((object) new SqlParameter("@person_id", person_id));
+            try
+            {
+                return this.ExecuteDataTable("cust_luminate_key_sp_get_person_keys", paramList);
+            }
+            catch (SqlException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+            }
+        }
+        //GetKeysByPersonDoor
+        public DataTable GetKeysByPersonDoor(int person_id, int door_id){
+            ArrayList paramList = new ArrayList();
+            paramList.Add((object) new SqlParameter("@person_id", person_id));
+            try
+            {
+                return this.ExecuteDataTable("cust_luminate_key_sp_get_person_keys", paramList);
+            }
+            catch (SqlException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+            }
+        }
+
+
         public int AddBlankLocation(int parent = 0){
             ArrayList paramList = new ArrayList();
             if(parent != 0) paramList.Add((object) new SqlParameter("@parent_id", (object) parent));

@@ -2,7 +2,6 @@
 
 <asp:Panel ID="pnlReports" Runat="server" CssClass="card card-accent-primary">
     <div class="card-block">
-        <asp:LinkButton ID="lbAdd" Runat="server" CssClass="btn btn-primary" Visible="False" Text="Add New Location" />
         <div class="table-responsive">
             <Arena:DataGrid id="dgDoors" DataKeyField="door_id" Runat="server" AllowSorting="true">
                 <Columns>
@@ -14,7 +13,7 @@
 	                </asp:TemplateColumn>--%>
 
                     <asp:TemplateColumn
-                        HeaderText="Location Name"
+                        HeaderText="Door Name"
                         SortExpression="door_name"
                         ItemStyle-VerticalAlign="Top"
                         ItemStyle-Wrap="false">

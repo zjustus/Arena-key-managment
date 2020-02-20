@@ -93,7 +93,7 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
             dgDoors.DataBind();
 
             dgDoors.Visible = true;
-            lbAdd.Visible = true;
+            //lbAdd.Visible = true;
         }
         //list support functions
         private void dgDoors_DeleteCommand(object sender, DataGridCommandEventArgs e)
