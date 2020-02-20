@@ -38,7 +38,7 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
 	/// </summary>
 	//public abstract class HtmlText : System.Web.UI.UserControl
 
-    public partial class Locations : PortalControl
+    public partial class Doors : PortalControl
     {
         #region Module Settings
         [NumericSetting("Person Page", "The person page id", false)]
@@ -67,7 +67,7 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
             //int listcategoryid = (CategoryEnable ? Int32.Parse(ddlReportCategory.SelectedValue.ToString()) : -1);
             //EditEnabled = CurrentModule.Permissions.Allowed(OperationType.Edit, CurrentUser);
             bool EditEnabled = true;
-            //dgLocations.Columns[4].Visible = CategoryEnable;
+            //dgDoors.Columns[4].Visible = CategoryEnable;
 
             //get the DataSource
             //DataSource = new ListData().GetPublicReports(ArenaContext.Current.Organization.OrganizationID, listcategoryid, CurrentPerson.PersonID);
@@ -78,45 +78,45 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
                 DataSource = new locationData().GetLocationsByParent(Int32.Parse(Request["parentID"]));
             }
 
-            dgLocations.Columns[5].Visible = true;
+            dgDoors.Columns[5].Visible = true;
 
-            dgLocations.Visible = true;
-            dgLocations.ItemType = "List";
-            dgLocations.ItemBgColor = CurrentPortalPage.Setting("ItemBgColor", string.Empty, false);
-            dgLocations.ItemAltBgColor = CurrentPortalPage.Setting("ItemAltBgColor", string.Empty, false);
-            dgLocations.ItemMouseOverColor = CurrentPortalPage.Setting("ItemMouseOverColor", string.Empty, false);
-            dgLocations.AddEnabled = false;
-            dgLocations.AddImageUrl = "~/images/add_list.gif";
-            dgLocations.MoveEnabled = false;
-            dgLocations.DeleteEnabled = EditEnabled;
-            dgLocations.EditEnabled = EditEnabled;
-            dgLocations.MergeEnabled = false;
-            dgLocations.MailEnabled = false;
-            dgLocations.ExportEnabled = false;
-            dgLocations.AllowSorting = true;
-            dgLocations.DataSource = DataSource;
-            dgLocations.DataBind();
+            dgDoors.Visible = true;
+            dgDoors.ItemType = "List";
+            dgDoors.ItemBgColor = CurrentPortalPage.Setting("ItemBgColor", string.Empty, false);
+            dgDoors.ItemAltBgColor = CurrentPortalPage.Setting("ItemAltBgColor", string.Empty, false);
+            dgDoors.ItemMouseOverColor = CurrentPortalPage.Setting("ItemMouseOverColor", string.Empty, false);
+            dgDoors.AddEnabled = false;
+            dgDoors.AddImageUrl = "~/images/add_list.gif";
+            dgDoors.MoveEnabled = false;
+            dgDoors.DeleteEnabled = EditEnabled;
+            dgDoors.EditEnabled = EditEnabled;
+            dgDoors.MergeEnabled = false;
+            dgDoors.MailEnabled = false;
+            dgDoors.ExportEnabled = false;
+            dgDoors.AllowSorting = true;
+            dgDoors.DataSource = DataSource;
+            dgDoors.DataBind();
 
-            dgLocations.Visible = true;
+            dgDoors.Visible = true;
             lbAdd.Visible = true;
         }
         //list support functions
-        private void dgLocations_DeleteCommand(object sender, DataGridCommandEventArgs e)
+        private void dgDoors_DeleteCommand(object sender, DataGridCommandEventArgs e)
         {
             //ListReport.Delete(Int32.Parse(e.Item.Cells[0].Text));
             //DelLocation
             int location_id = Int32.Parse(e.Item.Cells[0].Text);
             int theReturn = new locationData().DelLocation(location_id);
-            dgLocations.ItemUpdated(location_id);
-            dgLocations.EditItemIndex = -1;
+            dgDoors.ItemUpdated(location_id);
+            dgDoors.EditItemIndex = -1;
             ShowList();
         }
 
-        private void dgLocations_Rebind(object source, System.EventArgs e)
+        private void dgDoors_Rebind(object source, System.EventArgs e)
         {
             ShowList();
         }
-        private void dgLocations_AddItem(object sender, System.EventArgs e)
+        private void dgDoors_AddItem(object sender, System.EventArgs e)
         {
 
 
@@ -128,7 +128,7 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
             */
         }
 
-        private void dgLocations_EditCommand(object source, DataGridCommandEventArgs e)
+        private void dgDoors_EditCommand(object source, DataGridCommandEventArgs e)
         {
             /*
             ListReport rpt = new ListReport(Int32.Parse(e.Item.Cells[0].Text));
@@ -138,14 +138,14 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
                 e.Item.Cells[0].Text));
             */
         }
-        private void dgLocations_UpdateCommand(object source, DataGridCommandEventArgs e)
+        private void dgDoors_UpdateCommand(object source, DataGridCommandEventArgs e)
 		{
 			TextBox tbName = (TextBox)e.Item.FindControl("tbName");
             int location_id = Int32.Parse(e.Item.Cells[0].Text);
             int theReturn = new locationData().UpdateLocation(location_id, tbName.Text);
 
-            dgLocations.ItemUpdated(location_id);
-            dgLocations.EditItemIndex = -1;
+            dgDoors.ItemUpdated(location_id);
+            dgDoors.EditItemIndex = -1;
 			ShowList();
 		}
         protected void imgBtnAddRpt_Click(object sender, EventArgs e)
@@ -160,7 +160,7 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
             */
         }
 
-        private void dgLocations_ItemCreated(object sender, DataGridItemEventArgs e)
+        private void dgDoors_ItemCreated(object sender, DataGridItemEventArgs e)
         {
             /*
             ListItemType li = (ListItemType)e.Item.ItemType;
@@ -193,21 +193,21 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
 
         private void InitializeComponent()
         {
-            this.dgLocations.AddItem += new AddItemEventHandler(dgLocations_AddItem);
-            this.dgLocations.DeleteCommand += new DataGridCommandEventHandler(dgLocations_DeleteCommand);
-            this.dgLocations.EditCommand += new DataGridCommandEventHandler(dgLocations_EditCommand);
-            this.dgLocations.ItemCommand += new DataGridCommandEventHandler(dgLocations_EditCommand);
-            this.dgLocations.ReBind += new DataGridReBindEventHandler(this.dgLocations_Rebind);
-            this.dgLocations.ItemDataBound += new DataGridItemEventHandler(dgLocations_ItemDataBound);
-            this.dgLocations.ItemCreated += new DataGridItemEventHandler(dgLocations_ItemCreated);
-            this.dgLocations.UpdateCommand += new DataGridCommandEventHandler(dgLocations_UpdateCommand);
+            this.dgDoors.AddItem += new AddItemEventHandler(dgDoors_AddItem);
+            this.dgDoors.DeleteCommand += new DataGridCommandEventHandler(dgDoors_DeleteCommand);
+            this.dgDoors.EditCommand += new DataGridCommandEventHandler(dgDoors_EditCommand);
+            this.dgDoors.ItemCommand += new DataGridCommandEventHandler(dgDoors_EditCommand);
+            this.dgDoors.ReBind += new DataGridReBindEventHandler(this.dgDoors_Rebind);
+            this.dgDoors.ItemDataBound += new DataGridItemEventHandler(dgDoors_ItemDataBound);
+            this.dgDoors.ItemCreated += new DataGridItemEventHandler(dgDoors_ItemCreated);
+            this.dgDoors.UpdateCommand += new DataGridCommandEventHandler(dgDoors_UpdateCommand);
             //this.ddlReportCategory.SelectedIndexChanged += new EventHandler(ddlReportCategory_SelectedIndexChanged);
 
 
             imgBtnAddRpt.Click += new EventHandler(imgBtnAddRpt_Click);
         }
 
-        protected void dgLocations_ItemDataBound(object sender, DataGridItemEventArgs e)
+        protected void dgDoors_ItemDataBound(object sender, DataGridItemEventArgs e)
         {
             if ((e.Item.ItemType == ListItemType.Item) || (e.Item.ItemType == ListItemType.AlternatingItem))
             {
