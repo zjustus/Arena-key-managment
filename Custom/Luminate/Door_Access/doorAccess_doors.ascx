@@ -4,22 +4,22 @@
     <div class="card-block">
         <asp:LinkButton ID="lbAdd" Runat="server" CssClass="btn btn-primary" Visible="False" Text="Add New Location" />
         <div class="table-responsive">
-            <Arena:DataGrid id="dgDoors" DataKeyField="location_id" Runat="server" AllowSorting="true">
+            <Arena:DataGrid id="dgDoors" DataKeyField="door_id" Runat="server" AllowSorting="true">
                 <Columns>
-                    <asp:boundcolumn datafield="location_id" Visible="true" ReadOnly="True" HeaderText="ID"  />
-	                <%--<asp:TemplateColumn HeaderText="Report Name" ItemStyle-Wrap="false" ItemStyle-VerticalAlign="Top" SortExpression="location_name">
+                    <asp:boundcolumn datafield="door_id" Visible="true" ReadOnly="True" HeaderText="ID"  />
+	                <%--<asp:TemplateColumn HeaderText="Report Name" ItemStyle-Wrap="false" ItemStyle-VerticalAlign="Top" SortExpression="door_name">
 	                    <ItemTemplate>
-	                        <asp:LinkButton CommandName="ViewReport" Text='<%# Eval("location_name")%>' runat="server" ID="linkbtnViewReport"></asp:LinkButton>
+	                        <asp:LinkButton CommandName="ViewReport" Text='<%# Eval("door_name")%>' runat="server" ID="linkbtnViewReport"></asp:LinkButton>
 	                    </ItemTemplate>
 	                </asp:TemplateColumn>--%>
 
                     <asp:TemplateColumn
                         HeaderText="Location Name"
-                        SortExpression="location_name"
+                        SortExpression="door_name"
                         ItemStyle-VerticalAlign="Top"
                         ItemStyle-Wrap="false">
                         <ItemTemplate><asp:PlaceHolder id="phName" Runat="server"></asp:PlaceHolder></ItemTemplate>
-                        <EditItemTemplate><asp:TextBox ID="tbName" Runat="server" CssClass="form-control" Text='<%# DataBinder.Eval(Container.DataItem, "location_name") %>'></asp:TextBox></EditItemTemplate>
+                        <EditItemTemplate><asp:TextBox ID="tbName" Runat="server" CssClass="form-control" Text='<%# DataBinder.Eval(Container.DataItem, "door_name") %>'></asp:TextBox></EditItemTemplate>
                     </asp:TemplateColumn>
 
 	                <asp:TemplateColumn>

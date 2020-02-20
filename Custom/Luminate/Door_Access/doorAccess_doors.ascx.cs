@@ -45,7 +45,7 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
         public string PersonPageSetting { get { return Setting("PersonPage", "7", false); } }
         #endregion
 
-        //DoorAccess.locationData locationDataLayer;
+        //DoorAccess.doorData doorDataLayer;
 
         //page load
         protected void Page_Load(object sender, System.EventArgs e)
@@ -71,12 +71,7 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
 
             //get the DataSource
             //DataSource = new ListData().GetPublicReports(ArenaContext.Current.Organization.OrganizationID, listcategoryid, CurrentPerson.PersonID);
-            if(String.IsNullOrEmpty(Request["parentID"])){
-                DataSource = new locationData().GetLocationsByParent();
-            }
-            else{
-                DataSource = new locationData().GetLocationsByParent(Int32.Parse(Request["parentID"]));
-            }
+            DataSource = new doorData().GetDoorByLocation(Int32.Parse(Request["LocationID"]));
 
             dgDoors.Columns[5].Visible = true;
 
@@ -105,9 +100,9 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
         {
             //ListReport.Delete(Int32.Parse(e.Item.Cells[0].Text));
             //DelLocation
-            int location_id = Int32.Parse(e.Item.Cells[0].Text);
-            int theReturn = new locationData().DelLocation(location_id);
-            dgDoors.ItemUpdated(location_id);
+            int door_id = Int32.Parse(e.Item.Cells[0].Text);
+            int theReturn = new doorData().DelDoor(door_id);
+            dgDoors.ItemUpdated(door_id);
             dgDoors.EditItemIndex = -1;
             ShowList();
         }
@@ -141,16 +136,16 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
         private void dgDoors_UpdateCommand(object source, DataGridCommandEventArgs e)
 		{
 			TextBox tbName = (TextBox)e.Item.FindControl("tbName");
-            int location_id = Int32.Parse(e.Item.Cells[0].Text);
-            int theReturn = new locationData().UpdateLocation(location_id, tbName.Text);
+            int door_id = Int32.Parse(e.Item.Cells[0].Text);
+            int theReturn = new doorData().UpdateDoor(door_id, tbName.Text);
 
-            dgDoors.ItemUpdated(location_id);
+            dgDoors.ItemUpdated(door_id);
             dgDoors.EditItemIndex = -1;
 			ShowList();
 		}
         protected void imgBtnAddRpt_Click(object sender, EventArgs e)
         {
-            int newLocation = new locationData().AddBlankLocation();
+            int newDoor = new doorData().AddBlankDoor(Int32.Parse(Request["LocationID"]));
             ShowList();
             /*
             if (ddlSelectReport.SelectedValue.ToString() == "2")
@@ -220,7 +215,7 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
                     Int32.Parse(DetailPageIDSetting), row["lookup_type_id"].ToString());
                 */
                 aName.HRef = "~/default.aspx?";
-                aName.InnerText = row["location_name"].ToString();
+                aName.InnerText = row["door_name"].ToString();
                 /*
                 aName.InnerText = string.IsNullOrWhiteSpace(row["location_name"].ToString()) ? "[ Unnamed Lookup Type ]" : row["location_id"].ToString();
                 */
@@ -251,14 +246,14 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
 
 
 ////// DATA LAYER
-    public partial class locationData : SqlData{
+    public partial class doorData : SqlData{
         //ExecuteSqlDataReader
-        public DataTable GetLocationsByParent(int parent = 0){
+        public DataTable GetDoorByLocation(int location_id){
             ArrayList paramList = new ArrayList();
-            if(parent != 0) paramList.Add((object) new SqlParameter("@parent_id", (object) parent));
+            paramList.Add((object) new SqlParameter("@location_id", (object) location_id));
             try
             {
-                return this.ExecuteDataTable("cust_luminate_key_sp_get_locations", paramList);
+                return this.ExecuteDataTable("cust_luminate_key_sp_get_doors", paramList);
             }
             catch (SqlException ex)
             {
@@ -268,21 +263,21 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
             {
             }
         }
-        public int AddBlankLocation(int parent = 0){
+        public int AddBlankDoor(int location_id){
             ArrayList paramList = new ArrayList();
-            if(parent != 0) paramList.Add((object) new SqlParameter("@parent_id", (object) parent));
+            paramList.Add((object) new SqlParameter("@location_id", (object) location_id));
 
-            paramList.Add(new SqlParameter("@location_name", "New Location"));
+            paramList.Add(new SqlParameter("@door_name", "New Door"));
 
             SqlParameter paramOut = new SqlParameter(); //output paramaters
-            paramOut.ParameterName = "@location_id";
+            paramOut.ParameterName = "@door_id";
             paramOut.Direction = ParameterDirection.Output;
             paramOut.SqlDbType = SqlDbType.Int;
             paramList.Add(paramOut);
 
             try
             {
-                this.ExecuteNonQuery("cust_luminate_key_sp_add_location", paramList);
+                this.ExecuteNonQuery("cust_luminate_key_sp_add_door", paramList);
                 return (int)((SqlParameter)(paramList[paramList.Count - 1])).Value;
             }
             catch (SqlException ex)
@@ -293,17 +288,16 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
             {
             }
         }
-
-        //cust_luminate_key_sp_update_location
-        public int UpdateLocation(int location_id, string location_name){
+        //need to make sproc
+        public int UpdateDoor(int door_id, string door_name){
             ArrayList paramList = new ArrayList();
 
-            paramList.Add(new SqlParameter("@location_id", location_id));
-            paramList.Add(new SqlParameter("@location_name", location_name));
+            paramList.Add(new SqlParameter("@door_id", door_id));
+            paramList.Add(new SqlParameter("@door_name", door_name));
 
             try
             {
-                this.ExecuteNonQuery("cust_luminate_key_sp_update_location", paramList);
+                this.ExecuteNonQuery("cust_luminate_key_sp_update_door", paramList);
                 //return (int)((SqlParameter)(paramList[paramList.Count - 1])).Value;
             }
             catch (SqlException ex)
@@ -315,13 +309,13 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
             }
             return 1;
         }
-        public int DelLocation(int location_id){
+        public int DelDoor(int door_id){
             ArrayList paramList = new ArrayList();
-            paramList.Add(new SqlParameter("@location_id", location_id));
+            paramList.Add(new SqlParameter("@door_id", door_id));
 
             try
             {
-                this.ExecuteNonQuery("cust_luminate_key_sp_del_location", paramList);
+                this.ExecuteNonQuery("cust_luminate_key_sp_del_door", paramList);
                 //return (int)((SqlParameter)(paramList[paramList.Count - 1])).Value;
             }
             catch (SqlException ex)

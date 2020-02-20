@@ -41,8 +41,8 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
     public partial class Locations : PortalControl
     {
         #region Module Settings
-        [NumericSetting("Person Page", "The person page id", false)]
-        public string PersonPageSetting { get { return Setting("PersonPage", "7", false); } }
+        [NumericSetting("Door Page", "The door page ID", false)]
+        public string DoorPageSetting { get { return Setting("DoorPage", "3059", false); } }
         #endregion
 
         //DoorAccess.locationData locationDataLayer;
@@ -219,7 +219,8 @@ namespace ArenaWeb.UserControls.custom.Luminate.DoorAccess{
                 aName.HRef = string.Format("~/default.aspx?page={0}&lookuptypeid={1}",
                     Int32.Parse(DetailPageIDSetting), row["lookup_type_id"].ToString());
                 */
-                aName.HRef = "~/default.aspx?";
+                aName.HRef = string.Format("~/default.aspx?page={0}&LocationID={1}", Int32.Parse(DoorPageSetting), Int32.Parse(e.Item.Cells[0].Text));
+                //Int32.Parse(e.Item.Cells[0].Text)
                 aName.InnerText = row["location_name"].ToString();
                 /*
                 aName.InnerText = string.IsNullOrWhiteSpace(row["location_name"].ToString()) ? "[ Unnamed Lookup Type ]" : row["location_id"].ToString();
