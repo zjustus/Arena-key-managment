@@ -189,3 +189,19 @@ BEGIN
 	where door_key.door_id = @door_id
 END
 GO
+-- update location name
+CREATE or ALTER proc [dbo].[cust_luminate_key_sp_update_location] @location_id int, @location_name varchar(255) as
+begin
+	update dbo.cust_luminate_key_location
+	set location_name = @location_name
+	where location_id = @location_id
+end
+GO
+-- update door name
+CREATE or ALTER proc [dbo].[cust_luminate_key_sp_update_door] @door_id int, @door_name varchar(255) as
+begin
+	update dbo.cust_luminate_key_door
+	set door_name = @door_name
+	where door_id= @door_id
+end
+GO
